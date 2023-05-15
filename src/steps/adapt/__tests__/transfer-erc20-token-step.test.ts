@@ -208,5 +208,28 @@ describe('transfer-erc20-token-multi-step', () => {
     ).to.be.rejectedWith(
       `Transfer ERC20 Token Multi step is invalid. Specified amount ${amount.toString()} exceeds balance ${minBalance.toString()}.`,
     );
+
+    // Too low balance for erc20 input mid step
+    const stepInputOddBalance: StepInput = {
+      networkName,
+      erc20Amounts: [
+        {
+          ...erc20Info,
+          expectedBalance: BigNumber.from('7500'),
+          minBalance: BigNumber.from('7500'),
+          approvedSpender: undefined,
+        },
+      ],
+      nfts: [],
+    };
+    await expect(
+      step.getValidStepOutput(stepInputOddBalance),
+    ).to.be.rejectedWith(
+      `Transfer ERC20 Token Multi step is invalid. Specified amount ${amount.toString()} exceeds balance ${BigNumber.from(
+        '7500',
+      )
+        .sub(amount)
+        .toString()}.`,
+    );
   });
 });
