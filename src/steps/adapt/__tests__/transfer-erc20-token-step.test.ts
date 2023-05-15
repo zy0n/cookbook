@@ -14,6 +14,8 @@ const { expect } = chai;
 const networkName = NetworkName.Ethereum;
 const toAddress = '0xd8da6bf26964af9d7eed9e03e53415d37aa96045';
 const toAddress2 = '0x5b33D097820A0197cdF939E050cF57ECbA11279A';
+const maxBalance = BigNumber.from('12000');
+const minBalance = BigNumber.from('2000');
 const amount = BigNumber.from('5000');
 const erc20Info: RecipeERC20Info = {
   tokenAddress: '0xe76C6c83af64e4C60245D8C7dE953DF673a7A33D',
@@ -41,8 +43,8 @@ describe('transfer-erc20-token-multi-step', () => {
       erc20Amounts: [
         {
           ...erc20Info,
-          expectedBalance: BigNumber.from('12000'),
-          minBalance: BigNumber.from('12000'),
+          expectedBalance: maxBalance,
+          minBalance: maxBalance,
           approvedSpender: undefined,
         },
       ],
@@ -74,8 +76,8 @@ describe('transfer-erc20-token-multi-step', () => {
       {
         ...erc20Info,
         approvedSpender: undefined,
-        expectedBalance: BigNumber.from('2000'),
-        minBalance: BigNumber.from('2000'),
+        expectedBalance: minBalance,
+        minBalance,
       },
     ]);
 
@@ -115,8 +117,8 @@ describe('transfer-erc20-token-multi-step', () => {
       erc20Amounts: [
         {
           ...erc20Info,
-          expectedBalance: BigNumber.from('12000'),
-          minBalance: BigNumber.from('12000'),
+          expectedBalance: maxBalance,
+          minBalance: maxBalance,
           approvedSpender: undefined,
         },
       ],
@@ -132,7 +134,7 @@ describe('transfer-erc20-token-multi-step', () => {
         ...erc20Info,
       },
       {
-        amount: BigNumber.from('12000').sub(amount),
+        amount: maxBalance.sub(amount),
         recipient: toAddress2,
         ...erc20Info,
       },
@@ -154,47 +156,57 @@ describe('transfer-erc20-token-multi-step', () => {
     ]);
   });
 
-  // it('Should test transfer-base-token step error cases', async () => {
-  //   const step = new TransferBaseTokenStep(toAddress, amount);
+  it('Should test transfer-erc20-token-multi step error cases', async () => {
+    const testTransfers: ERC20Transfer[] = [
+      {
+        toAddress,
+        tokenInfo: erc20Info,
+        amount,
+      },
+      {
+        toAddress: toAddress2,
+        tokenInfo: erc20Info,
+        amount,
+      },
+    ];
 
-  //   // No matching erc20 inputs
-  //   const stepInputNoERC20s: StepInput = {
-  //     networkName,
-  //     erc20Amounts: [
-  //       {
-  //         tokenAddress,
-  //         decimals: 18,
-  //         isBaseToken: false,
-  //         expectedBalance: BigNumber.from('12000'),
-  //         minBalance: BigNumber.from('12000'),
-  //         approvedSpender: undefined,
-  //       },
-  //     ],
-  //     nfts: [],
-  //   };
-  //   await expect(step.getValidStepOutput(stepInputNoERC20s)).to.be.rejectedWith(
-  //     'Transfer Base Token step is invalid. No step inputs match filter.',
-  //   );
+    const step = new TransferERC20TokenMultiStep(testTransfers);
 
-  //   // Too low balance for erc20 input
-  //   const stepInputLowBalance: StepInput = {
-  //     networkName,
-  //     erc20Amounts: [
-  //       {
-  //         tokenAddress,
-  //         decimals: 18,
-  //         isBaseToken: true,
-  //         expectedBalance: BigNumber.from('2000'),
-  //         minBalance: BigNumber.from('2000'),
-  //         approvedSpender: undefined,
-  //       },
-  //     ],
-  //     nfts: [],
-  //   };
-  //   await expect(
-  //     step.getValidStepOutput(stepInputLowBalance),
-  //   ).to.be.rejectedWith(
-  //     'Transfer Base Token step is invalid. Specified amount 10000 exceeds balance 2000.',
-  //   );
-  // });
+    // No matching erc20 inputs
+    const stepInputNoERC20s: StepInput = {
+      networkName,
+      erc20Amounts: [
+        {
+          tokenAddress: toAddress,
+          decimals: 18,
+          expectedBalance: maxBalance,
+          minBalance: maxBalance,
+          approvedSpender: undefined,
+        },
+      ],
+      nfts: [],
+    };
+    await expect(step.getValidStepOutput(stepInputNoERC20s)).to.be.rejectedWith(
+      'Transfer ERC20 Token Multi step is invalid. No step inputs match filter.',
+    );
+
+    // Too low balance for erc20 input
+    const stepInputLowBalance: StepInput = {
+      networkName,
+      erc20Amounts: [
+        {
+          ...erc20Info,
+          expectedBalance: minBalance,
+          minBalance,
+          approvedSpender: undefined,
+        },
+      ],
+      nfts: [],
+    };
+    await expect(
+      step.getValidStepOutput(stepInputLowBalance),
+    ).to.be.rejectedWith(
+      `Transfer ERC20 Token Multi step is invalid. Specified amount ${amount.toString()} exceeds balance ${minBalance.toString()}.`,
+    );
+  });
 });
