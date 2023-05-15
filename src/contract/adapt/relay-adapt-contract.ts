@@ -61,4 +61,39 @@ export class RelayAdaptContract {
     };
     return this.contract.populateTransaction.transfer([baseTokenTransfer]);
   }
+
+  createERC20TokenTransferStruct(
+    toAddress: string,
+    tokenAddress: string,
+    amount?: BigNumber,
+  ): RelayAdapt.TokenTransferStruct {
+    const erc20TokenData = this.createERC20TokenData(tokenAddress);
+
+    const erc20TokenTransfer: RelayAdapt.TokenTransferStruct = {
+      token: erc20TokenData,
+      to: toAddress,
+      // 0 will automatically transfer full balance.
+      value: amount ?? BigNumber.from(0),
+    };
+    return erc20TokenTransfer;
+  }
+
+  createMultiERC20TokenTransfer(
+    erc20TokenTransfers: RelayAdapt.TokenTransferStruct[],
+  ): Promise<PopulatedTransaction> {
+    return this.contract.populateTransaction.transfer(erc20TokenTransfers);
+  }
+
+  createERC20TokenTransfer(
+    toAddress: string,
+    tokenAddress: string,
+    amount?: BigNumber,
+  ): Promise<PopulatedTransaction> {
+    const erc20TokenTransfer = this.createERC20TokenTransferStruct(
+      toAddress,
+      tokenAddress,
+      amount,
+    );
+    return this.contract.populateTransaction.transfer([erc20TokenTransfer]);
+  }
 }
