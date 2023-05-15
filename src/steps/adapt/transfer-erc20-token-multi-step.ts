@@ -35,8 +35,6 @@ export class TransferERC20TokenMultiStep extends Step {
   protected async getStepOutput(
     input: StepInput,
   ): Promise<UnvalidatedStepOutput> {
-    // start off with these inputs, but we'll pull the unusedERC20Amounts out
-    // each loop and replace erc20Amounts with that.
     const { erc20Amounts } = input;
     const contract = new RelayAdaptContract(input.networkName);
 
