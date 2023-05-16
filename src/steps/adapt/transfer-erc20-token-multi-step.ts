@@ -52,7 +52,7 @@ export class TransferERC20TokenMultiStep extends Step {
           amount,
         );
 
-      const erc20TokenTransfer = contract.createERC20TokenTransferStruct(
+      const erc20TokenTransfer = contract.createTokenTransferStruct(
         toAddress,
         tokenInfo.tokenAddress,
         amount,
