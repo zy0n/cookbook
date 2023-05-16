@@ -40,4 +40,8 @@ export class ERC20Contract {
   balanceOf(account: string): Promise<BigNumber> {
     return this.contract.balanceOf(account);
   }
+
+  decimals(): Promise<number> {
+    return this.contract.decimals();
+  }
 }
