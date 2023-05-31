@@ -11,9 +11,11 @@ import ABI_GMX_VAULT from './vault/gmx/Vault.json';
 import ABI_ACCESS_CARD_ERC721 from './access-card/AccessCardERC721.json';
 import ABI_ACCESS_CARD_OWNER_ACCOUNT from './access-card/AccessCardOwnerAccount.json';
 import ABI_ACCESS_CARD_ACCOUNT_CREATOR from './access-card/AccessCardAccountCreator.json';
+import ABI_PLASMA_TOKEN from './plasma/plasma.json';
 
 export const abi = {
   token: {
+    plasma: ABI_PLASMA_TOKEN,
     erc20: ABI_ERC20,
     erc721: ABI_ERC721,
     accessCardERC721: ABI_ACCESS_CARD_ERC721,
