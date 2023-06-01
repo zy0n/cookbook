@@ -32,7 +32,7 @@ export class PlasmaTokenContract {
   getContractAddressForNetwork(networkName: NetworkName): Optional<string> {
     switch (networkName) {
       case NetworkName.Ethereum:
-        return '0x30426D33a78afdb8788597D5BFaBdADc3Be95698';
+        return '0x9D3DA37d36BB0B825CD319ed129c2872b893f538';
       case NetworkName.Railgun:
       case NetworkName.BNBChain:
       case NetworkName.Polygon:

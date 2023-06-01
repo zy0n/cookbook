@@ -18,6 +18,7 @@ export class WithdrawPlasmaTokenStep extends Step {
     name: 'Withdraw PlasmaToken',
     description:
       'Unwraps Plasma for WETH. This withdraw earns rewards on flashLending fees.',
+    hasNonDeterministicOutput: true,
   };
 
   private readonly amount: Optional<BigNumber>;

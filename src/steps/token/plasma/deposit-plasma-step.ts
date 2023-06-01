@@ -18,6 +18,7 @@ export class DepositPlasmaTokenStep extends Step {
     name: 'Deposit PlasmaToken',
     description:
       'Wraps WETH for Plasma Token. This deposit earns rewards on flashLending fees.',
+    hasNonDeterministicOutput: true,
   };
 
   private readonly amount: Optional<BigNumber>;

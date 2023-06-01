@@ -56,6 +56,7 @@ export const setupTestRPCAndWallets = async (
   }
 
   const localhost = getLocalhostRPC(port);
+  //'https://rpc.vnet.tenderly.co/devnet/plasma-test/2514bf13-81d7-4448-88d5-f361a4485205'; //
   const testRPCProvider = new JsonRpcProvider(localhost);
   setSharedTestRPCProvider(testRPCProvider);
 
