@@ -56,6 +56,7 @@ describe('deposit-plasma-step', () => {
     expect(output.outputERC20Amounts).to.deep.equal([
       {
         approvedSpender: undefined,
+        isBaseToken: undefined,
         expectedBalance: amount,
         minBalance: amount,
         tokenAddress: plasmaAddress,
@@ -78,10 +79,12 @@ describe('deposit-plasma-step', () => {
     expect(output.populatedTransactions).to.deep.equal([
       {
         data: '0xb6b55f250000000000000000000000000000000000000000000000000000000000002710',
-        to: plasmaAddress,
+        to: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
       },
     ]);
-    expect(output.populatedTransactions[0].to).to.equal(plasmaAddress);
+    expect(output.populatedTransactions[0].to).to.equal(
+      '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
+    );
   });
 
   it('Should create deposit-plasma step without amount', async () => {
@@ -108,7 +111,7 @@ describe('deposit-plasma-step', () => {
     expect(output.spentERC20Amounts).to.deep.equal([
       {
         amount: BigNumber.from('12000'),
-        recipient: plasmaAddress,
+        recipient: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
         tokenAddress: wethInfo.tokenAddress,
         decimals: 18,
       },
@@ -118,6 +121,7 @@ describe('deposit-plasma-step', () => {
     expect(output.outputERC20Amounts).to.deep.equal([
       {
         approvedSpender: undefined,
+        isBaseToken: undefined,
         expectedBalance: BigNumber.from('12000'),
         minBalance: BigNumber.from('12000'),
         tokenAddress: plasmaAddress,
@@ -128,12 +132,19 @@ describe('deposit-plasma-step', () => {
     expect(output.spentNFTs).to.equal(undefined);
     expect(output.outputNFTs).to.deep.equal([]);
 
-    expect(output.feeERC20AmountRecipients).to.equal(undefined);
+    expect(output.feeERC20AmountRecipients).to.equal([
+      {
+        amount: BigNumber.from('0x00'),
+        recipient: 'PLASMA Deposit Fee',
+        tokenAddress: wethInfo.tokenAddress,
+        decimals: 18,
+      },
+    ]);
 
     expect(output.populatedTransactions).to.deep.equal([
       {
         data: '0xb6b55f250000000000000000000000000000000000000000000000000000000000002ee0',
-        to: plasmaAddress,
+        to: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
       },
     ]);
   });

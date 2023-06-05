@@ -33,7 +33,7 @@ export class PlasmaTokenRecipe extends Recipe {
   ): Optional<string> {
     switch (networkName) {
       case NetworkName.Ethereum:
-        return '0x9D3DA37d36BB0B825CD319ed129c2872b893f538';
+        return '0x687bB6c57915aa2529EfC7D2a26668855e022fAE';
       case NetworkName.Railgun:
       case NetworkName.BNBChain:
       case NetworkName.Polygon:
@@ -67,7 +67,7 @@ export class PlasmaTokenRecipe extends Recipe {
   protected async getInternalSteps(
     firstInternalStepInput: StepInput,
   ): Promise<Step[]> {
-    const { networkName } = firstInternalStepInput;
+    const { erc20Amounts, networkName } = firstInternalStepInput;
     const plasmaAddress = this.getContractAddressForNetwork(networkName);
     const { wrappedAddress } = NETWORK_CONFIG[networkName].baseToken;
 
@@ -82,7 +82,7 @@ export class PlasmaTokenRecipe extends Recipe {
       decimals: 18,
     };
     const unshieldedAmount = findFirstInputERC20Amount(
-      firstInternalStepInput.erc20Amounts,
+      erc20Amounts,
       plasmaInfo,
     );
     // determine the action
@@ -93,7 +93,7 @@ export class PlasmaTokenRecipe extends Recipe {
     //     : new WithdrawPlasmaTokenStep(plasmaAmount);
     const plasmaAmount = this.amount ?? amount;
     return [
-      new ApproveERC20SpenderStep(plasmaAddress, unshieldedAmount),
+      new ApproveERC20SpenderStep(plasmaAddress, plasmaInfo, plasmaAmount),
       this.action === 'Wrap'
         ? new DepositPlasmaTokenStep(plasmaAmount)
         : new WithdrawPlasmaTokenStep(plasmaAmount),

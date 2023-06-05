@@ -87,7 +87,10 @@ export const executeRecipeStepsAndAssertUnshieldBalances = async (
       networkName,
       recipeInput,
       recipeOutput,
-    );
+    ).catch(err => {
+      console.log(err);
+      throw err;
+    });
 
   if (gasEstimateString) {
     expect(

@@ -18,7 +18,6 @@ export class DepositPlasmaTokenStep extends Step {
     name: 'Deposit PlasmaToken',
     description:
       'Wraps WETH for Plasma Token. This deposit earns rewards on flashLending fees.',
-    hasNonDeterministicOutput: true,
   };
 
   private readonly amount: Optional<BigNumber>;
@@ -26,6 +25,7 @@ export class DepositPlasmaTokenStep extends Step {
   private readonly wethInfo: RecipeERC20Info = {
     tokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
     decimals: 18,
+    isBaseToken: false,
   };
 
   constructor(amount?: BigNumber) {
@@ -72,20 +72,18 @@ export class DepositPlasmaTokenStep extends Step {
       throw new Error(`Plasma Token Address not found on chain ${networkName}`);
     }
     const populatedTransactions: PopulatedTransaction[] = [
-      await contract.createDeposit(
-        this.amount ?? erc20AmountForStep.expectedBalance,
-      ),
+      await contract.createDeposit(erc20AmountForStep.expectedBalance),
     ];
 
     const transferredERC20: RecipeERC20AmountRecipient = {
       tokenAddress: this.wethInfo.tokenAddress,
       decimals: this.wethInfo.decimals,
-      amount: this.amount ?? erc20AmountForStep.expectedBalance,
-      recipient: contract.address ?? '',
+      amount: erc20AmountForStep.expectedBalance,
+      recipient: plasmaAddress,
     };
 
     // calculate the value
-    const expectedBalance = this.amount ?? erc20AmountForStep.expectedBalance;
+    const expectedBalance = erc20AmountForStep.expectedBalance;
 
     const wrappedPlasmaOutput: StepOutputERC20Amount = {
       tokenAddress: plasmaAddress,
@@ -93,10 +91,19 @@ export class DepositPlasmaTokenStep extends Step {
       expectedBalance: expectedBalance,
       minBalance: expectedBalance,
       approvedSpender: undefined,
+      isBaseToken: undefined,
     };
 
     return {
       populatedTransactions,
+      feeERC20AmountRecipients: [
+        {
+          amount: BigNumber.from(0x00),
+          recipient: 'PLASMA Deposit Fee',
+          tokenAddress: this.wethInfo.tokenAddress,
+          decimals: 18,
+        },
+      ],
       spentERC20Amounts: [transferredERC20],
       outputERC20Amounts: [wrappedPlasmaOutput, ...unusedERC20Amounts],
       outputNFTs: input.nfts,

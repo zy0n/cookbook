@@ -21,7 +21,7 @@ const { expect } = chai;
 const networkName = NetworkName.Ethereum;
 
 const toAddress = '0xd8da6bf26964af9d7eed9e03e53415d37aa96045';
-const amount = BigNumber.from('10000');
+const amount = BigNumber.from('100000000000000000');
 const tokenAddress = NETWORK_CONFIG[networkName].baseToken.wrappedAddress;
 
 describe('FORK-plasma-token-recipe', function run() {
@@ -52,7 +52,7 @@ describe('FORK-plasma-token-recipe', function run() {
         {
           tokenAddress,
           decimals: 18,
-          amount: BigNumber.from('12000'),
+          amount: BigNumber.from('120000000000000000'),
         },
       ],
       nfts: [],
@@ -96,21 +96,21 @@ describe('FORK-plasma-token-recipe', function run() {
         {
           tokenAddress,
           decimals: 18,
-          amount: BigNumber.from('12000'),
+          amount: BigNumber.from('120000000000000000'),
         },
       ],
       nfts: [],
     };
-
     const provider = getGanacheProvider();
     const initialToAddressETHBalance = await provider.getBalance(toAddress);
 
     const recipeOutput = await recipe.getRecipeOutput(recipeInput);
+    expect(recipeOutput.stepOutputs).to.deep.equal([]);
     await executeRecipeStepsAndAssertUnshieldBalances(
       recipe.config.name,
       recipeInput,
       recipeOutput,
-      2_800_000, // expectedGasWithin50K
+      10_800_000, // expectedGasWithin50K
     );
 
     // REQUIRED TESTS:

@@ -27,6 +27,7 @@ export const testConfig = {
     // Vault tokens
     crvCRVETH: '0xEd4064f376cB8d68F770FB1Ff088a3d0F3FF5c4d',
     crvCRVETHVaultToken: '0x245186CaA063b13d0025891c0d513aCf552fB38E',
+    // plasma: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
   },
 
   contractsArbitrum: {

@@ -62,7 +62,9 @@ export abstract class Step {
     }
     if (numFiltered > 1) {
       throw new Error(
-        `Expected one erc20 amount for step input - received ${numFiltered}.`,
+        `Expected one erc20 amount for step input - received ${numFiltered} ${JSON.stringify(
+          erc20AmountsForStep,
+        )}.`,
       );
     }
 
