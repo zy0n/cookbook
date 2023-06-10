@@ -73,6 +73,8 @@ export const setupTestRPCAndWallets = async (
     await testRPCProvider.send('anvil_reset', [{}]);
   }
 
+  dbg('Anvil Has Been RESET');
+
   const wallet = getTestEthersWallet();
   const oneThousand18Decimals = parseEther('1000').toString();
 

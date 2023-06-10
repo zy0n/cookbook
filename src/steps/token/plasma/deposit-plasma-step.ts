@@ -12,6 +12,11 @@ import { Step } from '../../step';
 import { PopulatedTransaction } from '@ethersproject/contracts';
 import { PlasmaTokenContract } from '../../../contract/token/plasma-contract';
 import { NETWORK_CONFIG, NetworkName } from '@railgun-community/shared-models';
+import {
+  getAmountToUnshieldForTarget,
+  getUnshieldFee,
+} from '../../../utils/fee';
+import { getProviderForNetwork } from '@railgun-community/quickstart';
 
 export class DepositPlasmaTokenStep extends Step {
   readonly config: StepConfig = {
@@ -42,7 +47,9 @@ export class DepositPlasmaTokenStep extends Step {
   }
 
   getPlasmaInfo(network: NetworkName) {
-    const contract = new PlasmaTokenContract(network);
+    // get provider for network.
+    const provider = getProviderForNetwork(network);
+    const contract = new PlasmaTokenContract(network, provider);
     const plasmaAddress = contract.getContractAddressForNetwork(network);
 
     return {
@@ -71,8 +78,16 @@ export class DepositPlasmaTokenStep extends Step {
     if (!plasmaAddress) {
       throw new Error(`Plasma Token Address not found on chain ${networkName}`);
     }
+
+    const expectedAmount = await contract.calculateDepositReturn(
+      erc20AmountForStep.expectedBalance,
+    );
+
     const populatedTransactions: PopulatedTransaction[] = [
-      await contract.createDeposit(erc20AmountForStep.expectedBalance),
+      await contract.createDeposit(
+        erc20AmountForStep.expectedBalance,
+        expectedAmount,
+      ),
     ];
 
     const transferredERC20: RecipeERC20AmountRecipient = {
@@ -88,22 +103,14 @@ export class DepositPlasmaTokenStep extends Step {
     const wrappedPlasmaOutput: StepOutputERC20Amount = {
       tokenAddress: plasmaAddress,
       decimals: this.wethInfo.decimals,
-      expectedBalance: expectedBalance,
-      minBalance: expectedBalance,
+      expectedBalance: expectedAmount,
+      minBalance: expectedAmount,
+      isBaseToken: false,
       approvedSpender: undefined,
-      isBaseToken: undefined,
     };
 
     return {
       populatedTransactions,
-      feeERC20AmountRecipients: [
-        {
-          amount: BigNumber.from(0x00),
-          recipient: 'PLASMA Deposit Fee',
-          tokenAddress: this.wethInfo.tokenAddress,
-          decimals: 18,
-        },
-      ],
       spentERC20Amounts: [transferredERC20],
       outputERC20Amounts: [wrappedPlasmaOutput, ...unusedERC20Amounts],
       outputNFTs: input.nfts,

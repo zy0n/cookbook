@@ -24,6 +24,7 @@ import type {
   TypedEvent,
   TypedListener,
   OnEvent,
+  PromiseOrValue,
 } from '../common';
 
 export interface PlasmaTokenInterface extends utils.Interface {
@@ -38,7 +39,7 @@ export interface PlasmaTokenInterface extends utils.Interface {
     'calculateShares(uint256)': FunctionFragment;
     'decimals()': FunctionFragment;
     'decreaseAllowance(address,uint256)': FunctionFragment;
-    'deposit(uint256)': FunctionFragment;
+    'deposit(uint256,uint256)': FunctionFragment;
     'feeBasis()': FunctionFragment;
     'feePoints()': FunctionFragment;
     'flashFee(address,uint256)': FunctionFragment;
@@ -63,7 +64,7 @@ export interface PlasmaTokenInterface extends utils.Interface {
     'transfer(address,uint256)': FunctionFragment;
     'transferFrom(address,address,uint256)': FunctionFragment;
     'transferOwnership(address)': FunctionFragment;
-    'withdraw(uint256)': FunctionFragment;
+    'withdraw(uint256,uint256)': FunctionFragment;
   };
 
   getFunction(
@@ -108,13 +109,16 @@ export interface PlasmaTokenInterface extends utils.Interface {
 
   encodeFunctionData(
     functionFragment: 'allowance',
-    values: [string, string],
+    values: [PromiseOrValue<string>, PromiseOrValue<string>],
   ): string;
   encodeFunctionData(
     functionFragment: 'approve',
-    values: [string, BigNumberish],
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
-  encodeFunctionData(functionFragment: 'balanceOf', values: [string]): string;
+  encodeFunctionData(
+    functionFragment: 'balanceOf',
+    values: [PromiseOrValue<string>],
+  ): string;
   encodeFunctionData(
     functionFragment: 'borrowToken',
     values?: undefined,
@@ -125,34 +129,39 @@ export interface PlasmaTokenInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: 'calculateAssets',
-    values: [BigNumberish],
+    values: [PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(
     functionFragment: 'calculateReward',
-    values: [BigNumberish, BigNumberish],
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(
     functionFragment: 'calculateShares',
-    values: [BigNumberish],
+    values: [PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(functionFragment: 'decimals', values?: undefined): string;
   encodeFunctionData(
     functionFragment: 'decreaseAllowance',
-    values: [string, BigNumberish],
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(
     functionFragment: 'deposit',
-    values: [BigNumberish],
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(functionFragment: 'feeBasis', values?: undefined): string;
   encodeFunctionData(functionFragment: 'feePoints', values?: undefined): string;
   encodeFunctionData(
     functionFragment: 'flashFee',
-    values: [string, BigNumberish],
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(
     functionFragment: 'flashLoan',
-    values: [string, string, BigNumberish, BytesLike],
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>,
+    ],
   ): string;
   encodeFunctionData(
     functionFragment: 'flashProfit',
@@ -160,11 +169,11 @@ export interface PlasmaTokenInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: 'increaseAllowance',
-    values: [string, BigNumberish],
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(
     functionFragment: 'isRailgunAddress',
-    values: [string],
+    values: [PromiseOrValue<string>],
   ): string;
   encodeFunctionData(
     functionFragment: 'lastStoredBalance',
@@ -172,7 +181,7 @@ export interface PlasmaTokenInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: 'maxFlashLoan',
-    values: [string],
+    values: [PromiseOrValue<string>],
   ): string;
   encodeFunctionData(functionFragment: 'name', values?: undefined): string;
   encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
@@ -198,11 +207,11 @@ export interface PlasmaTokenInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: 'setFeeBasis',
-    values: [BigNumberish],
+    values: [PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(
     functionFragment: 'setFeePoints',
-    values: [BigNumberish],
+    values: [PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(functionFragment: 'symbol', values?: undefined): string;
   encodeFunctionData(
@@ -215,19 +224,23 @@ export interface PlasmaTokenInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: 'transfer',
-    values: [string, BigNumberish],
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(
     functionFragment: 'transferFrom',
-    values: [string, string, BigNumberish],
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+    ],
   ): string;
   encodeFunctionData(
     functionFragment: 'transferOwnership',
-    values: [string],
+    values: [PromiseOrValue<string>],
   ): string;
   encodeFunctionData(
     functionFragment: 'withdraw',
-    values: [BigNumberish],
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
   ): string;
 
   decodeFunctionResult(functionFragment: 'allowance', data: BytesLike): Result;
@@ -405,50 +418,54 @@ export interface PlasmaToken extends BaseContract {
 
   functions: {
     allowance(
-      owner: string,
-      spender: string,
+      owner: PromiseOrValue<string>,
+      spender: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<[BigNumber]>;
 
     approve(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      spender: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
-    balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+    balanceOf(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber]>;
 
     borrowToken(overrides?: CallOverrides): Promise<[string]>;
 
     borrowTokenAddress(overrides?: CallOverrides): Promise<[string]>;
 
     calculateAssets(
-      shares: BigNumberish,
+      shares: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<[BigNumber]>;
 
     calculateReward(
-      amount: BigNumberish,
-      _totalSupply: BigNumberish,
+      amount: PromiseOrValue<BigNumberish>,
+      _totalSupply: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<[BigNumber]>;
 
     calculateShares(
-      assets: BigNumberish,
+      assets: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<[BigNumber]>;
 
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
     decreaseAllowance(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      spender: PromiseOrValue<string>,
+      subtractedValue: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     deposit(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      amount: PromiseOrValue<BigNumberish>,
+      minExpectedShares: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     feeBasis(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -456,36 +473,36 @@ export interface PlasmaToken extends BaseContract {
     feePoints(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     flashFee(
-      token: string,
-      amount: BigNumberish,
+      token: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<[BigNumber]>;
 
     flashLoan(
-      receiver: string,
-      token: string,
-      amount: BigNumberish,
-      data: BytesLike,
-      overrides?: Overrides & { from?: string },
+      receiver: PromiseOrValue<string>,
+      token: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     flashProfit(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     increaseAllowance(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      spender: PromiseOrValue<string>,
+      addedValue: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     isRailgunAddress(
-      account: string,
+      account: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<[boolean]>;
 
     lastStoredBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     maxFlashLoan(
-      token: string,
+      token: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<[BigNumber]>;
 
@@ -500,21 +517,21 @@ export interface PlasmaToken extends BaseContract {
     railgunTreasury(overrides?: CallOverrides): Promise<[string]>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: string },
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     resyncPool(
-      overrides?: Overrides & { from?: string },
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     setFeeBasis(
-      basis: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      basis: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     setFeePoints(
-      points: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      points: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
@@ -524,74 +541,79 @@ export interface PlasmaToken extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
-      to: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      to: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     transferFrom(
-      from: string,
-      to: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     transferOwnership(
-      newOwner: string,
-      overrides?: Overrides & { from?: string },
+      newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     withdraw(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      amount: PromiseOrValue<BigNumberish>,
+      minExpectedAssets: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
   };
 
   allowance(
-    owner: string,
-    spender: string,
+    owner: PromiseOrValue<string>,
+    spender: PromiseOrValue<string>,
     overrides?: CallOverrides,
   ): Promise<BigNumber>;
 
   approve(
-    spender: string,
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string },
+    spender: PromiseOrValue<string>,
+    amount: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
-  balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+  balanceOf(
+    account: PromiseOrValue<string>,
+    overrides?: CallOverrides,
+  ): Promise<BigNumber>;
 
   borrowToken(overrides?: CallOverrides): Promise<string>;
 
   borrowTokenAddress(overrides?: CallOverrides): Promise<string>;
 
   calculateAssets(
-    shares: BigNumberish,
+    shares: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides,
   ): Promise<BigNumber>;
 
   calculateReward(
-    amount: BigNumberish,
-    _totalSupply: BigNumberish,
+    amount: PromiseOrValue<BigNumberish>,
+    _totalSupply: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides,
   ): Promise<BigNumber>;
 
   calculateShares(
-    assets: BigNumberish,
+    assets: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides,
   ): Promise<BigNumber>;
 
   decimals(overrides?: CallOverrides): Promise<number>;
 
   decreaseAllowance(
-    spender: string,
-    subtractedValue: BigNumberish,
-    overrides?: Overrides & { from?: string },
+    spender: PromiseOrValue<string>,
+    subtractedValue: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   deposit(
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string },
+    amount: PromiseOrValue<BigNumberish>,
+    minExpectedShares: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   feeBasis(overrides?: CallOverrides): Promise<BigNumber>;
@@ -599,35 +621,38 @@ export interface PlasmaToken extends BaseContract {
   feePoints(overrides?: CallOverrides): Promise<BigNumber>;
 
   flashFee(
-    token: string,
-    amount: BigNumberish,
+    token: PromiseOrValue<string>,
+    amount: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides,
   ): Promise<BigNumber>;
 
   flashLoan(
-    receiver: string,
-    token: string,
-    amount: BigNumberish,
-    data: BytesLike,
-    overrides?: Overrides & { from?: string },
+    receiver: PromiseOrValue<string>,
+    token: PromiseOrValue<string>,
+    amount: PromiseOrValue<BigNumberish>,
+    data: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   flashProfit(overrides?: CallOverrides): Promise<BigNumber>;
 
   increaseAllowance(
-    spender: string,
-    addedValue: BigNumberish,
-    overrides?: Overrides & { from?: string },
+    spender: PromiseOrValue<string>,
+    addedValue: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   isRailgunAddress(
-    account: string,
+    account: PromiseOrValue<string>,
     overrides?: CallOverrides,
   ): Promise<boolean>;
 
   lastStoredBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
-  maxFlashLoan(token: string, overrides?: CallOverrides): Promise<BigNumber>;
+  maxFlashLoan(
+    token: PromiseOrValue<string>,
+    overrides?: CallOverrides,
+  ): Promise<BigNumber>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
@@ -640,21 +665,21 @@ export interface PlasmaToken extends BaseContract {
   railgunTreasury(overrides?: CallOverrides): Promise<string>;
 
   renounceOwnership(
-    overrides?: Overrides & { from?: string },
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   resyncPool(
-    overrides?: Overrides & { from?: string },
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   setFeeBasis(
-    basis: BigNumberish,
-    overrides?: Overrides & { from?: string },
+    basis: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   setFeePoints(
-    points: BigNumberish,
-    overrides?: Overrides & { from?: string },
+    points: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
@@ -664,107 +689,118 @@ export interface PlasmaToken extends BaseContract {
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
   transfer(
-    to: string,
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string },
+    to: PromiseOrValue<string>,
+    amount: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   transferFrom(
-    from: string,
-    to: string,
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string },
+    from: PromiseOrValue<string>,
+    to: PromiseOrValue<string>,
+    amount: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   transferOwnership(
-    newOwner: string,
-    overrides?: Overrides & { from?: string },
+    newOwner: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   withdraw(
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string },
+    amount: PromiseOrValue<BigNumberish>,
+    minExpectedAssets: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   callStatic: {
     allowance(
-      owner: string,
-      spender: string,
+      owner: PromiseOrValue<string>,
+      spender: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     approve(
-      spender: string,
-      amount: BigNumberish,
+      spender: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<boolean>;
 
-    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+    balanceOf(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>;
 
     borrowToken(overrides?: CallOverrides): Promise<string>;
 
     borrowTokenAddress(overrides?: CallOverrides): Promise<string>;
 
     calculateAssets(
-      shares: BigNumberish,
+      shares: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     calculateReward(
-      amount: BigNumberish,
-      _totalSupply: BigNumberish,
+      amount: PromiseOrValue<BigNumberish>,
+      _totalSupply: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     calculateShares(
-      assets: BigNumberish,
+      assets: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<number>;
 
     decreaseAllowance(
-      spender: string,
-      subtractedValue: BigNumberish,
+      spender: PromiseOrValue<string>,
+      subtractedValue: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<boolean>;
 
-    deposit(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
+    deposit(
+      amount: PromiseOrValue<BigNumberish>,
+      minExpectedShares: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<void>;
 
     feeBasis(overrides?: CallOverrides): Promise<BigNumber>;
 
     feePoints(overrides?: CallOverrides): Promise<BigNumber>;
 
     flashFee(
-      token: string,
-      amount: BigNumberish,
+      token: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     flashLoan(
-      receiver: string,
-      token: string,
-      amount: BigNumberish,
-      data: BytesLike,
+      receiver: PromiseOrValue<string>,
+      token: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides,
     ): Promise<boolean>;
 
     flashProfit(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseAllowance(
-      spender: string,
-      addedValue: BigNumberish,
+      spender: PromiseOrValue<string>,
+      addedValue: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<boolean>;
 
     isRailgunAddress(
-      account: string,
+      account: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<boolean>;
 
     lastStoredBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
-    maxFlashLoan(token: string, overrides?: CallOverrides): Promise<BigNumber>;
+    maxFlashLoan(
+      token: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -780,10 +816,13 @@ export interface PlasmaToken extends BaseContract {
 
     resyncPool(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setFeeBasis(basis: BigNumberish, overrides?: CallOverrides): Promise<void>;
+    setFeeBasis(
+      basis: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<void>;
 
     setFeePoints(
-      points: BigNumberish,
+      points: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<void>;
 
@@ -794,105 +833,113 @@ export interface PlasmaToken extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
-      to: string,
-      amount: BigNumberish,
+      to: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<boolean>;
 
     transferFrom(
-      from: string,
-      to: string,
-      amount: BigNumberish,
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<boolean>;
 
     transferOwnership(
-      newOwner: string,
+      newOwner: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    withdraw(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
+    withdraw(
+      amount: PromiseOrValue<BigNumberish>,
+      minExpectedAssets: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides,
+    ): Promise<void>;
   };
 
   filters: {
     'Approval(address,address,uint256)'(
-      owner?: string | null,
-      spender?: string | null,
+      owner?: PromiseOrValue<string> | null,
+      spender?: PromiseOrValue<string> | null,
       value?: null,
     ): ApprovalEventFilter;
     Approval(
-      owner?: string | null,
-      spender?: string | null,
+      owner?: PromiseOrValue<string> | null,
+      spender?: PromiseOrValue<string> | null,
       value?: null,
     ): ApprovalEventFilter;
 
     'OwnershipTransferred(address,address)'(
-      previousOwner?: string | null,
-      newOwner?: string | null,
+      previousOwner?: PromiseOrValue<string> | null,
+      newOwner?: PromiseOrValue<string> | null,
     ): OwnershipTransferredEventFilter;
     OwnershipTransferred(
-      previousOwner?: string | null,
-      newOwner?: string | null,
+      previousOwner?: PromiseOrValue<string> | null,
+      newOwner?: PromiseOrValue<string> | null,
     ): OwnershipTransferredEventFilter;
 
     'Transfer(address,address,uint256)'(
-      from?: string | null,
-      to?: string | null,
+      from?: PromiseOrValue<string> | null,
+      to?: PromiseOrValue<string> | null,
       value?: null,
     ): TransferEventFilter;
     Transfer(
-      from?: string | null,
-      to?: string | null,
+      from?: PromiseOrValue<string> | null,
+      to?: PromiseOrValue<string> | null,
       value?: null,
     ): TransferEventFilter;
   };
 
   estimateGas: {
     allowance(
-      owner: string,
-      spender: string,
+      owner: PromiseOrValue<string>,
+      spender: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     approve(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      spender: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
-    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+    balanceOf(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>;
 
     borrowToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     borrowTokenAddress(overrides?: CallOverrides): Promise<BigNumber>;
 
     calculateAssets(
-      shares: BigNumberish,
+      shares: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     calculateReward(
-      amount: BigNumberish,
-      _totalSupply: BigNumberish,
+      amount: PromiseOrValue<BigNumberish>,
+      _totalSupply: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     calculateShares(
-      assets: BigNumberish,
+      assets: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
     decreaseAllowance(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      spender: PromiseOrValue<string>,
+      subtractedValue: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     deposit(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      amount: PromiseOrValue<BigNumberish>,
+      minExpectedShares: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     feeBasis(overrides?: CallOverrides): Promise<BigNumber>;
@@ -900,35 +947,38 @@ export interface PlasmaToken extends BaseContract {
     feePoints(overrides?: CallOverrides): Promise<BigNumber>;
 
     flashFee(
-      token: string,
-      amount: BigNumberish,
+      token: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     flashLoan(
-      receiver: string,
-      token: string,
-      amount: BigNumberish,
-      data: BytesLike,
-      overrides?: Overrides & { from?: string },
+      receiver: PromiseOrValue<string>,
+      token: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     flashProfit(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseAllowance(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      spender: PromiseOrValue<string>,
+      addedValue: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     isRailgunAddress(
-      account: string,
+      account: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     lastStoredBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
-    maxFlashLoan(token: string, overrides?: CallOverrides): Promise<BigNumber>;
+    maxFlashLoan(
+      token: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -941,19 +991,21 @@ export interface PlasmaToken extends BaseContract {
     railgunTreasury(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: string },
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
-    resyncPool(overrides?: Overrides & { from?: string }): Promise<BigNumber>;
+    resyncPool(
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
 
     setFeeBasis(
-      basis: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      basis: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     setFeePoints(
-      points: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      points: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
@@ -963,44 +1015,45 @@ export interface PlasmaToken extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
-      to: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      to: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     transferFrom(
-      from: string,
-      to: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     transferOwnership(
-      newOwner: string,
-      overrides?: Overrides & { from?: string },
+      newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     withdraw(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      amount: PromiseOrValue<BigNumberish>,
+      minExpectedAssets: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     allowance(
-      owner: string,
-      spender: string,
+      owner: PromiseOrValue<string>,
+      spender: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     approve(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      spender: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     balanceOf(
-      account: string,
+      account: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
@@ -1011,32 +1064,33 @@ export interface PlasmaToken extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     calculateAssets(
-      shares: BigNumberish,
+      shares: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     calculateReward(
-      amount: BigNumberish,
-      _totalSupply: BigNumberish,
+      amount: PromiseOrValue<BigNumberish>,
+      _totalSupply: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     calculateShares(
-      assets: BigNumberish,
+      assets: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     decreaseAllowance(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      spender: PromiseOrValue<string>,
+      subtractedValue: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     deposit(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      amount: PromiseOrValue<BigNumberish>,
+      minExpectedShares: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     feeBasis(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1044,36 +1098,36 @@ export interface PlasmaToken extends BaseContract {
     feePoints(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     flashFee(
-      token: string,
-      amount: BigNumberish,
+      token: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     flashLoan(
-      receiver: string,
-      token: string,
-      amount: BigNumberish,
-      data: BytesLike,
-      overrides?: Overrides & { from?: string },
+      receiver: PromiseOrValue<string>,
+      token: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     flashProfit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     increaseAllowance(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      spender: PromiseOrValue<string>,
+      addedValue: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     isRailgunAddress(
-      account: string,
+      account: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     lastStoredBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     maxFlashLoan(
-      token: string,
+      token: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
@@ -1088,21 +1142,21 @@ export interface PlasmaToken extends BaseContract {
     railgunTreasury(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: string },
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     resyncPool(
-      overrides?: Overrides & { from?: string },
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     setFeeBasis(
-      basis: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      basis: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     setFeePoints(
-      points: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      points: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1112,26 +1166,27 @@ export interface PlasmaToken extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transfer(
-      to: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      to: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     transferFrom(
-      from: string,
-      to: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     transferOwnership(
-      newOwner: string,
-      overrides?: Overrides & { from?: string },
+      newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     withdraw(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string },
+      amount: PromiseOrValue<BigNumberish>,
+      minExpectedAssets: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
   };
 }

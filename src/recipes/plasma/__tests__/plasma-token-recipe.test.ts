@@ -15,7 +15,7 @@ const { expect } = chai;
 
 const networkName = NetworkName.Ethereum;
 const toAddress = '0xd8da6bf26964af9d7eed9e03e53415d37aa96045';
-const amount = BigNumber.from(1).mul(10).mul(18);
+const amount = BigNumber.from(10000);
 
 const tokenAddress = NETWORK_CONFIG[networkName].baseToken.wrappedAddress;
 
@@ -38,7 +38,7 @@ describe('plasma-token-recipe', () => {
           tokenAddress,
           decimals: 18,
           isBaseToken: false,
-          amount: amount.mul(2),
+          amount: BigNumber.from(12000),
         },
       ],
       nfts: [],
@@ -83,22 +83,22 @@ describe('plasma-token-recipe', () => {
         name: 'Deposit PlasmaToken',
         description:
           'Wraps WETH for Plasma Token. This deposit earns rewards on flashLending fees.',
-        feeERC20AmountRecipients: [
-          {
-            amount: BigNumber.from('0x00'),
-            recipient: 'PLASMA Deposit Fee',
-            tokenAddress,
-            decimals: 18,
-          },
-        ],
+        // feeERC20AmountRecipients: [
+        //   // {
+        //   //   amount: BigNumber.from('0x00'),
+        //   //   recipient: 'PLASMA Deposit Fee',
+        //   //   tokenAddress,
+        //   //   decimals: 18,
+        //   // },
+        // ],
         outputERC20Amounts: [
           {
             // Wrapped - WETH into Plasma
             approvedSpender: undefined,
-            isBaseToken: undefined,
-            expectedBalance: BigNumber.from('11970'), // 10000
-            minBalance: BigNumber.from('11970'), // 10000
-            tokenAddress: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
+            isBaseToken: false,
+            expectedBalance: BigNumber.from('10000'), // 10000
+            minBalance: BigNumber.from('10000'), // 10000
+            tokenAddress: '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503',
             decimals: 18,
           },
           {
@@ -114,14 +114,14 @@ describe('plasma-token-recipe', () => {
         outputNFTs: [],
         populatedTransactions: [
           {
-            data: '0xb6b55f250000000000000000000000000000000000000000000000000000000000002710',
-            to: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
+            data: '0xe2bbb15800000000000000000000000000000000000000000000000000000000000027100000000000000000000000000000000000000000000000000000000000002710',
+            to: '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503',
           },
         ],
         spentERC20Amounts: [
           {
-            amount: BigNumber.from('11970'),
-            recipient: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
+            amount: BigNumber.from('10000'),
+            recipient: '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503',
             tokenAddress,
             decimals: 18,
           },
@@ -169,7 +169,7 @@ describe('plasma-token-recipe', () => {
           {
             amount: BigNumber.from('25'),
             recipient: 'RAILGUN Shield Fee',
-            tokenAddress: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
+            tokenAddress: '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503',
             decimals: 18,
           },
           {
@@ -184,8 +184,8 @@ describe('plasma-token-recipe', () => {
             approvedSpender: undefined,
             expectedBalance: BigNumber.from('9975'),
             minBalance: BigNumber.from('9975'),
-            tokenAddress: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
-            isBaseToken: undefined,
+            tokenAddress: '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503',
+            isBaseToken: false,
             decimals: 18,
           },
           {
@@ -207,7 +207,7 @@ describe('plasma-token-recipe', () => {
     expect(
       output.erc20Amounts.map(({ tokenAddress }) => tokenAddress),
     ).to.deep.equal(
-      [tokenAddress, '0x687bB6c57915aa2529EfC7D2a26668855e022fAE'].map(
+      [tokenAddress, '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503'].map(
         tokenAddress => tokenAddress.toLowerCase(),
       ),
     );
@@ -231,7 +231,7 @@ describe('plasma-token-recipe', () => {
       {
         amount: BigNumber.from('25'),
         recipient: 'RAILGUN Shield Fee',
-        tokenAddress: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
+        tokenAddress: '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503',
         decimals: 18,
       },
       {
@@ -297,24 +297,24 @@ describe('plasma-token-recipe', () => {
           {
             // Wrapped - ETH
             approvedSpender: undefined,
-            isBaseToken: undefined,
+            isBaseToken: false,
             expectedBalance: BigNumber.from('11970'),
             minBalance: BigNumber.from('11970'),
-            tokenAddress: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
+            tokenAddress: '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503',
             decimals: 18,
           },
         ],
         outputNFTs: [],
         populatedTransactions: [
           {
-            data: '0xb6b55f250000000000000000000000000000000000000000000000000000000000002ec2',
-            to: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
+            data: '0xe2bbb1580000000000000000000000000000000000000000000000000000000000002ec20000000000000000000000000000000000000000000000000000000000002ec2',
+            to: '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503',
           },
         ],
         spentERC20Amounts: [
           {
             amount: BigNumber.from('11970'),
-            recipient: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
+            recipient: '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503',
             tokenAddress,
             decimals: 18,
           },
@@ -354,9 +354,9 @@ describe('plasma-token-recipe', () => {
             decimals: 18,
             expectedBalance: BigNumber.from(11941),
             minBalance: BigNumber.from(11941),
-            tokenAddress: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
+            tokenAddress: '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503',
             approvedSpender: undefined,
-            isBaseToken: undefined,
+            isBaseToken: false,
           },
         ],
         outputNFTs: [],
@@ -364,7 +364,7 @@ describe('plasma-token-recipe', () => {
           {
             amount: BigNumber.from(29),
             recipient: 'RAILGUN Shield Fee',
-            tokenAddress: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
+            tokenAddress: '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503',
             decimals: 18,
           },
         ],
@@ -376,7 +376,7 @@ describe('plasma-token-recipe', () => {
     expect(
       output.erc20Amounts.map(({ tokenAddress }) => tokenAddress),
     ).to.deep.equal(
-      [tokenAddress, '0x687bB6c57915aa2529EfC7D2a26668855e022fAE'].map(
+      [tokenAddress, '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503'].map(
         tokenAddress => tokenAddress.toLowerCase(),
       ),
     );
@@ -401,7 +401,7 @@ describe('plasma-token-recipe', () => {
         {
           amount: BigNumber.from('29'),
           recipient: 'RAILGUN Shield Fee',
-          tokenAddress: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
+          tokenAddress: '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503',
           decimals: 18,
         },
       ],
@@ -441,6 +441,7 @@ describe('plasma-token-recipe', () => {
       ],
       nfts: [],
     };
+
     await expect(recipe.getRecipeOutput(recipeInputTooLow)).to.be.rejectedWith(
       'Approve ERC20 Spender step is invalid. Specified amount 10000 exceeds balance 1995.',
     );

@@ -21,7 +21,8 @@ describe('deposit-plasma-step', () => {
     const step = new DepositPlasmaTokenStep(amount);
     const { plasmaAddress } = step.getPlasmaInfo(networkName);
     const wethInfo = step.getWethInfo();
-
+    // this input is simulated unshield step.
+    // output value being 12000
     const stepInput: StepInput = {
       networkName,
       erc20Amounts: [
@@ -56,7 +57,7 @@ describe('deposit-plasma-step', () => {
     expect(output.outputERC20Amounts).to.deep.equal([
       {
         approvedSpender: undefined,
-        isBaseToken: undefined,
+        isBaseToken: false,
         expectedBalance: amount,
         minBalance: amount,
         tokenAddress: plasmaAddress,
@@ -78,12 +79,12 @@ describe('deposit-plasma-step', () => {
 
     expect(output.populatedTransactions).to.deep.equal([
       {
-        data: '0xb6b55f250000000000000000000000000000000000000000000000000000000000002710',
-        to: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
+        data: '0xe2bbb15800000000000000000000000000000000000000000000000000000000000027100000000000000000000000000000000000000000000000000000000000002710',
+        to: '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503',
       },
     ]);
     expect(output.populatedTransactions[0].to).to.equal(
-      '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
+      '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503',
     );
   });
 
@@ -111,7 +112,7 @@ describe('deposit-plasma-step', () => {
     expect(output.spentERC20Amounts).to.deep.equal([
       {
         amount: BigNumber.from('12000'),
-        recipient: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
+        recipient: '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503',
         tokenAddress: wethInfo.tokenAddress,
         decimals: 18,
       },
@@ -121,7 +122,7 @@ describe('deposit-plasma-step', () => {
     expect(output.outputERC20Amounts).to.deep.equal([
       {
         approvedSpender: undefined,
-        isBaseToken: undefined,
+        isBaseToken: false,
         expectedBalance: BigNumber.from('12000'),
         minBalance: BigNumber.from('12000'),
         tokenAddress: plasmaAddress,
@@ -132,19 +133,22 @@ describe('deposit-plasma-step', () => {
     expect(output.spentNFTs).to.equal(undefined);
     expect(output.outputNFTs).to.deep.equal([]);
 
-    expect(output.feeERC20AmountRecipients).to.equal([
-      {
-        amount: BigNumber.from('0x00'),
-        recipient: 'PLASMA Deposit Fee',
-        tokenAddress: wethInfo.tokenAddress,
-        decimals: 18,
-      },
-    ]);
+    expect(output.feeERC20AmountRecipients).to.equal(
+      undefined,
+      // [
+      // {
+      //   amount: BigNumber.from('0x00'),
+      //   recipient: 'PLASMA Deposit Fee',
+      //   tokenAddress: wethInfo.tokenAddress,
+      //   decimals: 18,
+      // },
+      //]
+    );
 
     expect(output.populatedTransactions).to.deep.equal([
       {
-        data: '0xb6b55f250000000000000000000000000000000000000000000000000000000000002ee0',
-        to: '0x687bB6c57915aa2529EfC7D2a26668855e022fAE',
+        data: '0xe2bbb1580000000000000000000000000000000000000000000000000000000000002ee00000000000000000000000000000000000000000000000000000000000002ee0',
+        to: '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503',
       },
     ]);
   });

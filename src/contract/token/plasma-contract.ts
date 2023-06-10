@@ -32,7 +32,7 @@ export class PlasmaTokenContract {
   getContractAddressForNetwork(networkName: NetworkName): Optional<string> {
     switch (networkName) {
       case NetworkName.Ethereum:
-        return '0x687bB6c57915aa2529EfC7D2a26668855e022fAE';
+        return '0x1dBDba33dfA381bCC89FCe74DFF69Aa96B53b503';
       case NetworkName.Railgun:
       case NetworkName.BNBChain:
       case NetworkName.Polygon:
@@ -46,20 +46,34 @@ export class PlasmaTokenContract {
     }
   }
 
-  createDeposit(amount: BigNumber): Promise<PopulatedTransaction> {
-    return this.contract.populateTransaction.deposit(amount);
+  async createDeposit(
+    amount: BigNumber,
+    expectedAmount?: BigNumber,
+  ): Promise<PopulatedTransaction> {
+    if (!expectedAmount) {
+      const recvShares = await this.calculateDepositReturn(amount);
+      return this.contract.populateTransaction.deposit(amount, recvShares);
+    }
+    return this.contract.populateTransaction.deposit(amount, expectedAmount);
   }
 
-  createWithdraw(amount: BigNumber): Promise<PopulatedTransaction> {
-    return this.contract.populateTransaction.withdraw(amount);
+  async createWithdraw(
+    amount: BigNumber,
+    expectedAmount?: BigNumber,
+  ): Promise<PopulatedTransaction> {
+    if (!expectedAmount) {
+      const recvAssets = await this.calculateWithdrawReturn(amount);
+      return this.contract.populateTransaction.withdraw(amount, recvAssets);
+    }
+    return this.contract.populateTransaction.withdraw(amount, expectedAmount);
   }
 
-  calculateDepositReturn(amount: BigNumber): Promise<BigNumber> {
-    return this.contract.calculateShares(amount);
+  async calculateDepositReturn(amount: BigNumber): Promise<BigNumber> {
+    return await this.contract.calculateShares(amount);
   }
 
-  calculateWithdrawReturn(amount: BigNumber): Promise<BigNumber> {
-    return this.contract.calculateAssets(amount);
+  async calculateWithdrawReturn(amount: BigNumber): Promise<BigNumber> {
+    return await this.contract.calculateAssets(amount);
   }
 
   balanceOf(account: string): Promise<BigNumber> {

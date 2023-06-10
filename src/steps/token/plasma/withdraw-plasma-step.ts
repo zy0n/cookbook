@@ -12,6 +12,7 @@ import { Step } from '../../step';
 import { PopulatedTransaction } from '@ethersproject/contracts';
 import { PlasmaTokenContract } from '../../../contract/token/plasma-contract';
 import { NETWORK_CONFIG, NetworkName } from '@railgun-community/shared-models';
+import { getProviderForNetwork } from '@railgun-community/quickstart';
 
 export class WithdrawPlasmaTokenStep extends Step {
   readonly config: StepConfig = {
@@ -42,7 +43,9 @@ export class WithdrawPlasmaTokenStep extends Step {
   }
 
   getPlasmaInfo(network: NetworkName) {
-    const contract = new PlasmaTokenContract(network);
+    const provider = getProviderForNetwork(network);
+
+    const contract = new PlasmaTokenContract(network, provider);
     const plasmaAddress = contract.getContractAddressForNetwork(network);
 
     return {
@@ -70,30 +73,34 @@ export class WithdrawPlasmaTokenStep extends Step {
           }) && isApprovedForSpender(erc20Amount, plasmaAddress),
         this.amount,
       );
+    const expectedAmount = await contract.calculateWithdrawReturn(
+      erc20AmountForStep.expectedBalance,
+    );
 
     const populatedTransactions: PopulatedTransaction[] = [
       await contract.createWithdraw(
         this.amount ?? erc20AmountForStep.expectedBalance,
+        expectedAmount,
       ),
     ];
 
-    const transferredERC20: RecipeERC20AmountRecipient = {
-      tokenAddress: plasmaAddress,
-      decimals: this.wethInfo.decimals,
-      amount: this.amount ?? erc20AmountForStep.expectedBalance,
-      recipient: plasmaAddress,
-    };
+      const transferredERC20: RecipeERC20AmountRecipient = {
+        tokenAddress: plasmaAddress,
+        decimals: this.wethInfo.decimals,
+        amount: this.amount ?? erc20AmountForStep.expectedBalance,
+        recipient: plasmaAddress,
+      };
 
-    // calculate the value
-    const expectedBalance = this.amount ?? erc20AmountForStep.expectedBalance;
+      // calculate the value
+      const expectedBalance = this.amount ?? erc20AmountForStep.expectedBalance;
 
-    const unwrappedPlasmaOutput: StepOutputERC20Amount = {
-      tokenAddress: this.wethInfo.tokenAddress,
-      decimals: this.wethInfo.decimals,
-      expectedBalance: expectedBalance,
-      minBalance: expectedBalance,
-      approvedSpender: undefined,
-    };
+      const unwrappedPlasmaOutput: StepOutputERC20Amount = {
+        tokenAddress: this.wethInfo.tokenAddress,
+        decimals: this.wethInfo.decimals,
+        expectedBalance: expectedAmount,
+        minBalance: expectedAmount,
+        approvedSpender: undefined,
+      };
 
     return {
       populatedTransactions,
